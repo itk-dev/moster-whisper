@@ -1,0 +1,24 @@
+services:
+  whisper:
+    build: .docker/whisper
+    networks:
+      - app
+      - frontend
+    ports:
+      - '5000'
+
+  openai-whisper-asr-webservice:
+    image: onerahmet/openai-whisper-asr-webservice:latest
+    networks:
+      - app
+      - frontend
+    ports:
+      - '9000'
+
+  node:
+    image: node:18
+    profiles:
+      - dev
+    working_dir: /app
+    volumes:
+      - .:/app
