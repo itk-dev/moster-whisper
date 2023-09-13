@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ 'Record'|trans }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+<body>
+{% macro transcribe_textarea(options={}, context={}) %}
+    {% set name = options.name %}
+    {% set label = options.label|default(name) %}
+    {% set element_id = options.id|default(name ~ '-' ~ random()) %}
+    {% set config = {
+        transcribe_url: context.transcribe_url,
+        transcribe_target: '[name="' ~ name ~ '"]'
+    } %}
+    <div class="mb-3" data-transcribe-config="{{ config|json_encode }}" data-transcribe-status>
+        <label for="{{ element_id }}" class="form-label">{{ label }}</label>
+        <textarea class="form-control" name="{{ name }}" id="{{ element_id }}" rows="3"></textarea>
+
+        <div class="form-audio-transcription">
+            <button type="button" data-record-action="start" class="btn btn-outline-primary">{{ 'Start recording'|trans }}</button>
+            <button type="button" data-record-action="stop" class="btn btn-outline-danger">{{ 'Stop recording'|trans }}</button>
+            <audio controls></audio>
+            <a class="btn btn-link">{{ 'Download message'|trans }}</a>
+        </div>
+    </div>
+{% endmacro %}
+
+<div class="container-fluid">
+    <form method="post">
+        {{ _self.transcribe_textarea({
+            name: 'message',
+            label: 'Message'|trans,
+        }, _context) }}
+        {{ _self.transcribe_textarea({name: 'another-message'}, _context) }}
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+{{ encore_entry_script_tags('record') }}
+</body>
+</html>

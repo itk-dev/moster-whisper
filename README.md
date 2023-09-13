@@ -5,6 +5,10 @@
 ```sh
 docker compose up --detach --build
 docker compose exec phpfpm composer install
+docker compose run --rm node yarn install
+docker compose run --rm node yarn build
+# We need HTTPS to record audio. This assumes we're using https://github.com/itk-dev/devops_itkdev-docker.
+open "https://moster-whisper.local.itkdev.dk/record"
 ```
 
 ```sh

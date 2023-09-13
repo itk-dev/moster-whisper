@@ -1,4 +1,10 @@
 services:
+  phpfpm:
+    environment:
+      - PHP_MAX_EXECUTION_TIME=300
+      - PHP_MEMORY_LIMIT=512M
+      - PHP_UPLOAD_MAX_FILESIZE=90M
+
   whisper:
     build: .docker/whisper
     networks:
