@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+<body>
+{# https://codepen.io/yepzdk/pen/PoXjpLr #}
+<section class="container mx-3 md:mx-auto mt-5">
+    <h1 class="text-2xl mb-3">Tale til tekst afprøvning</h1>
+
+    <div class="grid md:grid-cols-3 gap-4 divide-y-2 md:divide-y-0 md:divide-x-2 bg-gray-50 p-5">
+
+        <div>
+            <h2 class="text-lg">Upload en lyd-fil du vil lave til tekst.</h2>
+            <input class="my-3" type="file" accept="audio/x-wav" capture id="recorder"/>
+            <p>Eller optag en ny fil</p>
+            <button class="bg-gray-200 rounded px-3 py-2 my-3" type="submit" id="recorder"><i
+                        class="fas fa-microphone mr-3"></i>Start optagelse
+            </button>
+        </div>
+
+        <div class="pt-5 md:pt-0 md:pl-5 opacity-50">
+            <h2 class="text-lg">Lyt til din lydfil</h2>
+            <audio class="my-3 w-full" id="player" controls></audio>
+        </div>
+
+        <div class="pt-5 md:pt-0 md:pl-5 opacity-50">
+            <h2 class="text-lg">Din lyd-fil som tekst</h2>
+            <p class="animate-pulse">Afventer transkribering fra webservice</p>
+            <textarea name="transcription" id="transcription" class="w-full h-36 animate-pulse border bg-slate-100">
+      </textarea>
+            <button class="bg-indigo-500 text-white rounded px-3 py-2" type="submit">Godkend tekst og indsend</button>
+        </div>
+
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+<script>
+    const recorder = document.getElementById('recorder');
+    const player = document.getElementById('player');
+
+    recorder.addEventListener('change', async function (e) {
+        const file = e.target.files[0];
+        const url = URL.createObjectURL(file);
+        // Do something with the audio file.
+        player.src = url;
+
+        // Upload file to transcribe API
+        try {
+            const transcribeUrl = {{ transcribe_url|json_encode|raw }};
+
+            const formData = new FormData();
+            formData.set('audio_file', file);
+            const response = await fetch(transcribeUrl, {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+            console.log({result});
+            document.getElementById('transcription').innerText = result.content
+        } catch (error) {
+            console.error({error});
+        }
+    });
+
+</script>
+</body>
+</html>

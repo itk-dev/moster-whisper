@@ -4,6 +4,14 @@
 
 ```sh
 docker compose up --detach --build
+docker compose exec phpfpm composer install
+```
+
+```sh
+curl "http://$(docker compose port nginx 8080)/transcribe" \
+  --header 'content-type: multipart/form-data' \
+  --form 'audio_file=@tests/test.da.wav;type=audio/x-wav' \
+  --verbose
 ```
 
 ## <https://github.com/lablab-ai/whisper-api-flask>
@@ -33,6 +41,7 @@ open "http://$(docker compose port openai-whisper-asr-webservice 9000)/docs"
 
 ```sh
 curl "http://$(docker compose port openai-whisper-asr-webservice 9000)/asr?task=transcribe&encode=true&output=txt" \
+  --header 'accept: application/json' \
   --header 'content-type: multipart/form-data' \
   --form 'audio_file=@tests/test.da.wav;type=audio/x-wav' \
   --verbose
@@ -41,6 +50,12 @@ curl "http://$(docker compose port openai-whisper-asr-webservice 9000)/asr?task=
 ## Coding standards
 
 ```sh
+docker compose exec phpfpm composer coding-standards-check
+docker compose exec phpfpm composer coding-standards-apply
+```
+
+```sh
 docker compose run --rm node yarn install
 docker compose run --rm node yarn coding-standards-check
+docker compose run --rm node yarn coding-standards-apply
 ```
