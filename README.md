@@ -3,6 +3,7 @@
 <https://github.com/guillaumekln/faster-whisper>
 
 ```sh
+docker compose pull
 docker compose up --detach --build
 docker compose exec phpfpm composer install
 docker compose run --rm node yarn install

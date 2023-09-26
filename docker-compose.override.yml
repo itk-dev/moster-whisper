@@ -13,8 +13,19 @@ services:
     ports:
       - '5000'
 
+  # TODO Make this work
+  # faster-whisper:
+  #   build: .docker/faster-whisper
+  #   networks:
+  #     - app
+  #     - frontend
+  #   ports:
+  #     - '5000'
+
   openai-whisper-asr-webservice:
     image: onerahmet/openai-whisper-asr-webservice:latest
+    environment:
+        - ASR_MODEL=medium
     networks:
       - app
       - frontend
