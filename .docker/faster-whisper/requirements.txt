@@ -1,0 +1,8 @@
+flask
+flask-cors
+luminoth
+# https://github.com/lablab-ai/whisper-api-flask#how-to-run-the-container
+# https://github.com/lablab-ai/whisper-api-flask/issues/5
+markupsafe==2.0.1
+
+faster-whisper

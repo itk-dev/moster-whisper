@@ -1,0 +1,41 @@
+services:
+  phpfpm:
+    environment:
+      - PHP_MAX_EXECUTION_TIME=300
+      - PHP_MEMORY_LIMIT=512M
+      - PHP_UPLOAD_MAX_FILESIZE=90M
+
+  whisper:
+    build: .docker/whisper
+    networks:
+      - app
+      - frontend
+    ports:
+      - '5000'
+
+  # TODO Make this work
+  # faster-whisper:
+  #   build: .docker/faster-whisper
+  #   networks:
+  #     - app
+  #     - frontend
+  #   ports:
+  #     - '5000'
+
+  openai-whisper-asr-webservice:
+    image: onerahmet/openai-whisper-asr-webservice:latest
+    environment:
+        - ASR_MODEL=medium
+    networks:
+      - app
+      - frontend
+    ports:
+      - '9000'
+
+  node:
+    image: node:18
+    profiles:
+      - dev
+    working_dir: /app
+    volumes:
+      - .:/app
